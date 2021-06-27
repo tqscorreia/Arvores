@@ -1,5 +1,6 @@
 import sys
 
+
 class Node(object):
     def __init__(self, data, priority):
         self.data = data
@@ -7,6 +8,7 @@ class Node(object):
         self.pai = None
         self.left = None
         self.right = None
+
 
 class Treap(object):
     def __init__(self):
@@ -29,12 +31,12 @@ class Treap(object):
             self.__print_helper(currPtr.right, indent, True)
 
     def __search_tree_helper(self, node, key):
-            if node == None or key == node.data:
-                return node
+        if node == None or key == node.data:
+            return node
 
-            if key < node.data:
-                return self.__search_tree_helper(node.left, key)
-            return self.__search_tree_helper(node.right, key)
+        if key < node.data:
+            return self.__search_tree_helper(node.left, key)
+        return self.__search_tree_helper(node.right, key)
 
     # rotate left at node x
     def __left_rotate(self, x):
@@ -85,7 +87,6 @@ class Treap(object):
 
         self.moveUp(x)
 
-
     # insert the key to the tree in its appropriate position
     def insert(self, key, priority):
         node = Node(key, priority)
@@ -111,13 +112,11 @@ class Treap(object):
         self.moveUp(node)
 
     def pretty_print(self):
-            self.__print_helper(self.root, "", True)
+        self.__print_helper(self.root, "", True)
+
 
 if __name__ == "__main__":
-
-
     bst = Treap()
-
 
     bst.insert(5, 0.30)
     bst.insert(7, 0.47)
