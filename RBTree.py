@@ -1,6 +1,5 @@
 import sys
 
-
 # Node creation
 class Node:
     def __init__(self, item):
@@ -19,8 +18,19 @@ class RedBlackTree:
         self.TNULL.right = None
         self.root = self.TNULL
 
-    # Balance the tree after insertion
-    def fix_insert(self, k):
+    #faz a procura recursiva na arvore
+    def _procura(self, node, key):
+        if node == TNULL:
+            print("ELEMENTO NAO ENCONTRADO")
+        if key == node.item:
+            return node
+
+        if key < node.data:
+            return self._procura(node.left, key)
+        return self._procura(node.right, key)
+
+    #reorganiza a arvore apos uma inserçao
+    def _inserir(self, k):
         while k.parent.color == 1:
             if k.parent == k.parent.parent.right:
                 u = k.parent.parent.left
@@ -32,10 +42,10 @@ class RedBlackTree:
                 else:
                     if k == k.parent.left:
                         k = k.parent
-                        self.right_rotate(k)
+                        self.rightRotate(k)
                     k.parent.color = 0
                     k.parent.parent.color = 1
-                    self.left_rotate(k.parent.parent)
+                    self.leftRotate(k.parent.parent)
             else:
                 u = k.parent.parent.right
 
@@ -47,31 +57,23 @@ class RedBlackTree:
                 else:
                     if k == k.parent.right:
                         k = k.parent
-                        self.left_rotate(k)
+                        self.leftRotate(k)
                     k.parent.color = 0
                     k.parent.parent.color = 1
-                    self.right_rotate(k.parent.parent)
+                    self.rightRotate(k.parent.parent)
             if k == self.root:
                 break
         self.root.color = 0
 
-    # Printing the tree
-    def __print_helper(self, node, indent, last):
-        if node != self.TNULL:
-            sys.stdout.write(indent)
-            if last:
-                sys.stdout.write("R----")
-                indent += "     "
-            else:
-                sys.stdout.write("L----")
-                indent += "|    "
+    # faz a listagem recursiva na arvore
+    def _lista(self, node):
+        if node != TNULL:
+            self._lista(node.left)
+            sys.stdout.write(node.data + " ")
+            self._lista(node.right)
 
-            s_color = "RED" if node.color == 1 else "BLACK"
-            print(str(node.item) + "(" + s_color + ")")
-            self.__print_helper(node.left, indent, False)
-            self.__print_helper(node.right, indent, True)
-
-    def left_rotate(self, x):
+    #faz a rotaçao para o lado esquerdo do node x
+    def leftRotate(self, x):
         y = x.right
         x.right = y.left
         if y.left != self.TNULL:
@@ -87,7 +89,8 @@ class RedBlackTree:
         y.left = x
         x.parent = y
 
-    def right_rotate(self, x):
+    #faz a rotaçao para o lado direito do node x
+    def rightRotate(self, x):
         y = x.left
         x.left = y.right
         if y.right != self.TNULL:
@@ -103,7 +106,12 @@ class RedBlackTree:
         y.right = x
         x.parent = y
 
-    def insert(self, key):
+    #inicia a procura pelo node K
+    def procura(self, k):
+        return self._procura(self.root, k)
+
+    #inicia a inserçao da key na arvore
+    def inserir(self, key):
         node = Node(key)
         node.parent = None
         node.item = key
@@ -136,22 +144,33 @@ class RedBlackTree:
         if node.parent.parent == None:
             return
 
-        self.fix_insert(node)
+        self._inserir(node)
 
-    def print_tree(self):
-        self.__print_helper(self.root, "", True)
+    def lista(self):
+        self._lista(self.root)
+
 
 
 if __name__ == "__main__":
-    bst = RedBlackTree()
+    rb = RedBlackTree()
+    info = ''
 
-    bst.insert(8)
-    bst.insert(18)
-    bst.insert(5)
-    bst.insert(15)
-    bst.insert(17)
-    bst.insert(25)
-    bst.insert(40)
-    bst.insert(80)
+    while info != 'FIM':
+        info = input()
+        infoParsed = info.split(' ')
+        if infoParsed[0] == 'ACRESCENTA':
+            rb.inserir(int(infoParsed[1]))
+        if infoParsed[0] == 'CONSULTA':
+            rb.procura(int(infoParsed[1]))
+        if infoParsed[0] == 'LISTAGEM':
+            rb.lista()
+            print("FIM")
+        """if infoParsed[0] == 'APAGA':
+            print("ARVORE APAGADA")
+            root = None
 
-    bst.print_tree()
+    rb.insert(8)
+    rb.insert(18)
+
+
+    rb.print_tree()"""
