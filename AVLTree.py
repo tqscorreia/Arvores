@@ -4,8 +4,8 @@ class No(object):
     def __init__(self, num, vacina, data):
         self.num = num
         self.vacina = [[vacina, data]]
-        self.dir = None
-        self.esq = None
+        self.right = None
+        self.left = None
         self.height = 1
 
 
@@ -18,10 +18,10 @@ class AVLTree(object):
             print("NOVO UTENTE CRIADO")
             return No(num, vacina, data)
         elif num < root.num:
-            root.esq = self.inserir(root.esq, num, vacina, data)
+            root.left = self.inserir(root.left, num, vacina, data)
 
         elif num > root.num:
-            root.dir = self.inserir(root.dir, num, vacina, data)
+            root.right = self.inserir(root.right, num, vacina, data)
 
         elif num == root.num:
             cond = True
@@ -35,22 +35,22 @@ class AVLTree(object):
                 print("NOVA VACINA INSERIDA")
                 root.vacina.append([vacina, data])
 
-        root.height = 1 + max(self.altura(root.esq),
-                              self.altura(root.dir))
+        root.height = 1 + max(self.altura(root.left),
+                              self.altura(root.right))
 
         fator = self.equilibrio(root)
         if fator > 1:
             if self.equilibrio(root.esq) >= 0:
                 return self.rightRotate(root)
             else:
-                root.esq = self.leftRotate(root.esq)
+                root.left = self.leftRotate(root.left)
                 return self.rightRotate(root)
 
         if fator < -1:
             if self.equilibrio(root.dir) <= 0:
                 return self.leftRotate(root)
             else:
-                root.dir = self.rightRotate(root.dir)
+                root.right = self.rightRotate(root.right)
                 return self.leftRotate(root)
 
         return root
@@ -72,35 +72,35 @@ class AVLTree(object):
             return
 
         elif root.num < key:
-            return self.procura(root.dir, key)
+            return self.procura(root.right, key)
         elif root.num > key:
-            return self.procura(root.esq, key)
+            return self.procura(root.left, key)
 
     def equilibrio(self, root):
         if not root:
             return 0
-        return self.altura(root.esq) - self.altura(root.dir)
+        return self.altura(root.left) - self.altura(root.right)
 
     def leftRotate(self, z):
-        y = z.dir
-        T2 = y.esq
-        y.esq = z
-        z.dir = T2
-        z.height = 1 + max(self.altura(z.esq),
-                           self.altura(z.dir))
-        y.height = 1 + max(self.altura(y.esq),
-                           self.altura(y.dir))
+        y = z.right
+        T2 = y.left
+        y.left = z
+        z.right = T2
+        z.height = 1 + max(self.altura(z.left),
+                           self.altura(z.right))
+        y.height = 1 + max(self.altura(y.left),
+                           self.altura(y.right))
         return y
 
     def rightRotate(self, z):
-        y = z.esq
-        T3 = y.dir
-        y.dir = z
-        z.esq = T3
-        z.height = 1 + max(self.altura(z.esq),
-                           self.altura(z.dir))
-        y.height = 1 + max(self.altura(y.esq),
-                           self.altura(y.dir))
+        y = z.left
+        T3 = y.right
+        y.right = z
+        z.left = T3
+        z.height = 1 + max(self.altura(z.left),
+                           self.altura(z.right))
+        y.height = 1 + max(self.altura(y.left),
+                           self.altura(y.right))
         return y
 
     def altura(self, root):

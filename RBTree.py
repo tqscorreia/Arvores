@@ -4,7 +4,7 @@ import sys
 class Node:
     def __init__(self, item):
         self.item = item
-        self.parent = None
+        self.pai = None
         self.left = None
         self.right = None
         self.color = 1
@@ -18,102 +18,127 @@ class RedBlackTree:
         self.TNULL.right = None
         self.root = self.TNULL
 
-    #faz a procura recursiva na arvore
-    def _procura(self, node, key):
-        if node == TNULL:
-            print("ELEMENTO NAO ENCONTRADO")
-        if key == node.item:
-            return node
-
-        if key < node.data:
-            return self._procura(node.left, key)
-        return self._procura(node.right, key)
-
-    #reorganiza a arvore apos uma inserçao
-    def _inserir(self, k):
-        while k.parent.color == 1:
-            if k.parent == k.parent.parent.right:
-                u = k.parent.parent.left
-                if u.color == 1:
-                    u.color = 0
-                    k.parent.color = 0
-                    k.parent.parent.color = 1
-                    k = k.parent.parent
-                else:
-                    if k == k.parent.left:
-                        k = k.parent
-                        self.rightRotate(k)
-                    k.parent.color = 0
-                    k.parent.parent.color = 1
-                    self.leftRotate(k.parent.parent)
-            else:
-                u = k.parent.parent.right
-
-                if u.color == 1:
-                    u.color = 0
-                    k.parent.color = 0
-                    k.parent.parent.color = 1
-                    k = k.parent.parent
-                else:
-                    if k == k.parent.right:
-                        k = k.parent
-                        self.leftRotate(k)
-                    k.parent.color = 0
-                    k.parent.parent.color = 1
-                    self.rightRotate(k.parent.parent)
-            if k == self.root:
-                break
-        self.root.color = 0
-
-    # faz a listagem recursiva na arvore
-    def _lista(self, node):
-        if node != TNULL:
-            self._lista(node.left)
-            sys.stdout.write(node.data + " ")
-            self._lista(node.right)
-
-    #faz a rotaçao para o lado esquerdo do node x
+    # faz a rotaçao para o lado esquerdo do node x
     def leftRotate(self, x):
         y = x.right
         x.right = y.left
         if y.left != self.TNULL:
-            y.left.parent = x
+            y.left.pai = x
 
-        y.parent = x.parent
-        if x.parent == None:
+        y.pai = x.pai
+        if x.pai is None:
             self.root = y
-        elif x == x.parent.left:
-            x.parent.left = y
+        elif x == x.pai.left:
+            x.pai.left = y
         else:
-            x.parent.right = y
+            x.pai.right = y
         y.left = x
-        x.parent = y
+        x.pai = y
 
-    #faz a rotaçao para o lado direito do node x
+    # faz a rotaçao para o lado direito do node x
     def rightRotate(self, x):
         y = x.left
         x.left = y.right
         if y.right != self.TNULL:
-            y.right.parent = x
+            y.right.pai = x
 
-        y.parent = x.parent
-        if x.parent == None:
+        y.pai = x.pai
+        if x.pai is None:
             self.root = y
-        elif x == x.parent.right:
-            x.parent.right = y
+        elif x == x.pai.right:
+            x.pai.right = y
         else:
-            x.parent.left = y
+            x.pai.left = y
         y.right = x
-        x.parent = y
+        x.pai = y
 
-    #inicia a procura pelo node K
-    def procura(self, k):
-        return self._procura(self.root, k)
+    # Preorder
+    def _preorder(self, node):
+        if node is not self.TNULL:
+            sys.stdout.write(node.item + " ")
+            self._preorder(node.left)
+            self._preorder(node.right)
 
-    #inicia a inserçao da key na arvore
-    def inserir(self, key):
+    # Inorder
+    def _inorder(self, node):
+        if node != self.TNULL:
+            self._inorder(node.left)
+            sys.stdout.write(node.item + " ")
+            self._inorder(node.right)
+
+    # Postorder
+    def _postorder(self, node):
+        if node != self.TNULL:
+            self._postorder(node.left)
+            self._postorder(node.right)
+            sys.stdout.write(node.item + " ")
+
+    # faz a procura recursiva na arvore
+    def _procurar(self, node, key):
+        if node == self.TNULL:
+            print("O ELEMENTO "+str(key)+" NAO FOI ENCONTRADO")
+            return
+        elif key == node.item:
+            print("O ELEMENTO "+str(key)+" FOI ENCONTRADO")
+            return
+
+        if key < node.item:
+            return self._procurar(node.left, key)
+        return self._procurar(node.right, key)
+
+    # faz com que a arvore mantenha o equilibrio segundo as regras de construçao de uma arvore vermenlha e preta
+    def _inserir(self, k):
+        while k.pai.color == 1:
+            if k.pai == k.pai.pai.right:
+                u = k.pai.pai.left
+                if u.color == 1:
+                    u.color = 0
+                    k.pai.color = 0
+                    k.pai.pai.color = 1
+                    k = k.pai.pai
+                else:
+                    if k == k.pai.left:
+                        k = k.pai
+                        self.rightRotate(k)
+                    k.pai.color = 0
+                    k.pai.pai.color = 1
+                    self.leftRotate(k.pai.pai)
+            else:
+                u = k.pai.pai.right
+
+                if u.color == 1:
+                    u.color = 0
+                    k.pai.color = 0
+                    k.pai.pai.color = 1
+                    k = k.pai.pai
+                else:
+                    if k == k.pai.right:
+                        k = k.pai
+                        self.leftRotate(k)
+                    k.pai.color = 0
+                    k.pai.pai.color = 1
+                    self.rightRotate(k.pai.pai)
+            if k == self.root:
+                break
+        self.root.color = 0
+
+    def preorder(self):
+        self._preorder(self.root)
+
+    def inorder(self):
+        self._inorder(self.root)
+
+    def postorder(self):
+        self._postorder(self.root)
+
+    # inicia a procura pelo node K
+    def procurar(self, k):
+        return self._procurar(self.root, k)
+
+    # inicia a inserçao da key na arvore
+    def insert(self, key):
         node = Node(key)
-        node.parent = None
+        node.pai = None
         node.item = key
         node.left = self.TNULL
         node.right = self.TNULL
@@ -129,48 +154,224 @@ class RedBlackTree:
             else:
                 x = x.right
 
-        node.parent = y
-        if y == None:
+        node.pai = y
+        if y is None:
             self.root = node
         elif node.item < y.item:
             y.left = node
         else:
             y.right = node
 
-        if node.parent == None:
+        if node.pai is None:
             node.color = 0
             return
 
-        if node.parent.parent == None:
+        if node.pai.pai is None:
             return
 
         self._inserir(node)
 
-    def lista(self):
-        self._lista(self.root)
+
+
+
+
+
+
+    # Printing the tree
+    def __print_helper(self, node, indent, last):
+        if node != self.TNULL:
+            sys.stdout.write(indent)
+            if last:
+                sys.stdout.write("R----")
+                indent += "     "
+            else:
+                sys.stdout.write("L----")
+                indent += "|    "
+
+            s_color = "RED" if node.color == 1 else "BLACK"
+            print(str(node.item) + "(" + s_color + ")")
+            self.__print_helper(node.left, indent, False)
+            self.__print_helper(node.right, indent, True)
+
+    def print_tree(self):
+        self.__print_helper(self.root, "", True)
+
+
+
+
+
+
+
+
+
+
+    # Balancing the tree after deletion
+    def delete_fix(self, x):
+        while x != self.root and x.color == 0:
+            if x == x.pai.left:
+                s = x.pai.right
+                if s.color == 1:
+                    s.color = 0
+                    x.pai.color = 1
+                    self.left_rotate(x.pai)
+                    s = x.pai.right
+
+                if s.left.color == 0 and s.right.color == 0:
+                    s.color = 1
+                    x = x.pai
+                else:
+                    if s.right.color == 0:
+                        s.left.color = 0
+                        s.color = 1
+                        self.right_rotate(s)
+                        s = x.pai.right
+
+                    s.color = x.pai.color
+                    x.pai.color = 0
+                    s.right.color = 0
+                    self.left_rotate(x.pai)
+                    x = self.root
+            else:
+                s = x.pai.left
+                if s.color == 1:
+                    s.color = 0
+                    x.pai.color = 1
+                    self.right_rotate(x.pai)
+                    s = x.pai.left
+
+                if s.right.color == 0 and s.right.color == 0:
+                    s.color = 1
+                    x = x.pai
+                else:
+                    if s.left.color == 0:
+                        s.right.color = 0
+                        s.color = 1
+                        self.left_rotate(s)
+                        s = x.pai.left
+
+                    s.color = x.pai.color
+                    x.pai.color = 0
+                    s.left.color = 0
+                    self.right_rotate(x.pai)
+                    x = self.root
+        x.color = 0
+
+    def __rb_transplant(self, u, v):
+        if u.pai is None:
+            self.root = v
+        elif u == u.pai.left:
+            u.pai.left = v
+        else:
+            u.pai.right = v
+        v.pai = u.pai
+
+    # Node deletion
+    def delete_node_helper(self, node, key):
+        z = self.TNULL
+        while node != self.TNULL:
+            if node.item == key:
+                z = node
+
+            if node.item <= key:
+                node = node.right
+            else:
+                node = node.left
+
+        if z == self.TNULL:
+            print("Cannot find key in the tree")
+            return
+
+        y = z
+        y_original_color = y.color
+        if z.left == self.TNULL:
+            x = z.right
+            self.__rb_transplant(z, z.right)
+        elif z.right == self.TNULL:
+            x = z.left
+            self.__rb_transplant(z, z.left)
+        else:
+            y = self.minimum(z.right)
+            y_original_color = y.color
+            x = y.right
+            if y.pai == z:
+                x.pai = y
+            else:
+                self.__rb_transplant(y, y.right)
+                y.right = z.right
+                y.right.pai = y
+
+            self.__rb_transplant(z, y)
+            y.left = z.left
+            y.left.pai = y
+            y.color = z.color
+        if y_original_color == 0:
+            self.delete_fix(x)
+
+    def minimum(self, node):
+        while node.left != self.TNULL:
+            node = node.left
+        return node
+
+    def maximum(self, node):
+        while node.right != self.TNULL:
+            node = node.right
+        return node
+
+    def successor(self, x):
+        if x.right != self.TNULL:
+            return self.minimum(x.right)
+
+        y = x.pai
+        while y != self.TNULL and x == y.right:
+            x = y
+            y = y.pai
+        return y
+
+    def predecessor(self,  x):
+        if x.left != self.TNULL:
+            return self.maximum(x.left)
+
+        y = x.pai
+        while y != self.TNULL and x == y.left:
+            x = y
+            y = y.pai
+
+        return y
+
+
+
+
+
+    def get_root(self):
+        return self.root
+
+    def delete_node(self, item):
+        self.delete_node_helper(self.root, item)
+
+
+
+
+
+
+
 
 
 
 if __name__ == "__main__":
-    rb = RedBlackTree()
-    info = ''
+    bst = RedBlackTree()
 
-    while info != 'FIM':
-        info = input()
-        infoParsed = info.split(' ')
-        if infoParsed[0] == 'ACRESCENTA':
-            rb.inserir(int(infoParsed[1]))
-        if infoParsed[0] == 'CONSULTA':
-            rb.procura(int(infoParsed[1]))
-        if infoParsed[0] == 'LISTAGEM':
-            rb.lista()
-            print("FIM")
-        """if infoParsed[0] == 'APAGA':
-            print("ARVORE APAGADA")
-            root = None
+    bst.insert(55)
+    bst.insert(40)
+    bst.insert(65)
+    bst.insert(60)
+    bst.insert(75)
+    bst.insert(57)
 
-    rb.insert(8)
-    rb.insert(18)
+    bst.print_tree()
 
+    bst.searchTree(410)
 
-    rb.print_tree()"""
+    print("\nAfter deleting an element")
+    bst.delete_node(40)
+    bst.print_tree()
+

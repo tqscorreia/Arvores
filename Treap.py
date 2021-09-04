@@ -1,7 +1,7 @@
 import sys
 
 
-class Node(object):
+class Node:
     def __init__(self, data, priority):
         self.data = data
         self.priority = priority
@@ -10,13 +10,13 @@ class Node(object):
         self.right = None
 
 
-class Treap(object):
+class Treap:
     def __init__(self):
         self.root = None
 
     def __print_helper(self, currPtr, indent, last):
         # print the tree structure on the screen
-        if currPtr != None:
+        if currPtr is not None:
             sys.stdout.write(indent)
             if last:
                 sys.stdout.write("R----")
@@ -31,9 +31,12 @@ class Treap(object):
             self.__print_helper(currPtr.right, indent, True)
 
     def __search_tree_helper(self, node, key):
-        if node == None or key == node.data:
+        if node is None:
+            print("ELEMENTO NAO ENCONTRADO")
+            return
+        elif key == node.item:
+            print("ELEMENTO ENCONTRADO")
             return node
-
         if key < node.data:
             return self.__search_tree_helper(node.left, key)
         return self.__search_tree_helper(node.right, key)
@@ -42,11 +45,11 @@ class Treap(object):
     def __left_rotate(self, x):
         y = x.right
         x.right = y.left
-        if y.left != None:
+        if y.left is not None:
             y.left.pai = x
 
         y.pai = x.pai
-        if x.pai == None:
+        if x.pai is None:
             self.root = y
         elif x == x.pai.left:
             x.pai.left = y
@@ -59,11 +62,11 @@ class Treap(object):
     def __right_rotate(self, x):
         y = x.left
         x.left = y.right
-        if y.right != None:
+        if y.right is not None:
             y.right.pai = x
 
         y.pai = x.pai
-        if x.pai == None:
+        if x.pai is None:
             self.root = y
         elif x == x.pai.right:
             x.pai.right = y
@@ -75,7 +78,7 @@ class Treap(object):
 
     # Splaying operation. It moves x to the root of the tree
     def moveUp(self, x):
-        if x.pai == None:
+        if x.pai is None:
             return
         elif x.priority <= x.pai.priority:
             return
@@ -93,7 +96,7 @@ class Treap(object):
         y = None
         x = self.root
 
-        while x != None:
+        while x is not None:
             y = x
             if node.data < x.data:
                 x = x.left
@@ -102,7 +105,7 @@ class Treap(object):
 
         # y is parent of x
         node.pai = y
-        if y == None:
+        if y is None:
             self.root = node
         elif node.data < y.data:
             y.left = node
