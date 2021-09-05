@@ -184,7 +184,7 @@ if __name__ == "__main__":
         if infoParsed[0] == 'ACRESCENTA':
             t.inserir(int(infoParsed[1]), int(infoParsed[2]))
         if infoParsed[0] == 'CONSULTA':
-            t.procura(int(infoParsed[1]))
+            t.procurar(int(infoParsed[1]))
         if infoParsed[0] == 'LISTAGEM':
             t.inorder()
             print("FIM")

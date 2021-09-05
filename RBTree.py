@@ -55,7 +55,7 @@ class RedBlackTree:
     # funçao para print em pre-ordem
     def _preorder(self, node):
         if node is not self.TNULL:
-            sys.stdout.write(node.item + " ")
+            sys.stdout.write(str(node.item) + " ")
             self._preorder(node.left)
             self._preorder(node.right)
 
@@ -63,7 +63,7 @@ class RedBlackTree:
     def _inorder(self, node):
         if node != self.TNULL:
             self._inorder(node.left)
-            sys.stdout.write(node.item + " ")
+            sys.stdout.write(str(node.item) + " ")
             self._inorder(node.right)
 
     # funçao para print em pos-ordem
@@ -71,7 +71,7 @@ class RedBlackTree:
         if node != self.TNULL:
             self._postorder(node.left)
             self._postorder(node.right)
-            sys.stdout.write(node.item + " ")
+            sys.stdout.write(str(node.item) + " ")
 
     # faz a procura recursiva na arvore
     def _procurar(self, node, key):
@@ -79,9 +79,12 @@ class RedBlackTree:
             print("O ELEMENTO "+str(key)+" NAO FOI ENCONTRADO")
             return
         elif key == node.item:
-            print("O ELEMENTO "+str(key)+" FOI ENCONTRADO")
+            print("O ELEMENTO "+str(key)+" FOI ENCONTRADO COM A COR ", "")
+            if node.color == 1:
+                print("VERMELHA")
+            else:
+                print("PRETA")
             return
-
         if key < node.item:
             return self._procurar(node.left, key)
         return self._procurar(node.right, key)
@@ -359,20 +362,19 @@ class RedBlackTree:
 
 if __name__ == "__main__":
     rb = RedBlackTree()
-"""
+
     info = ''
 
     while info != 'FIM':
         info = input()
         infoParsed = info.split(' ')
-        if infoParsed[0] == 'ACRESCENTA':
+        if infoParsed[0] == 'A':
             rb.inserir(int(infoParsed[1]))
-        if infoParsed[0] == 'CONSULTA':
-            rb.procura(int(infoParsed[1]))
-        if infoParsed[0] == 'LISTAGEM':
+        if infoParsed[0] == 'C':
+            rb.procurar(int(infoParsed[1]))
+        if infoParsed[0] == 'L':
             rb.inorder()
             print("FIM")
-        if infoParsed[0] == 'APAGA':
+        if infoParsed[0] == 'D':
             print("LISTAGEM DE NOMES APAGADA")
             root = None
-            """
