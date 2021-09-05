@@ -52,21 +52,21 @@ class RedBlackTree:
         y.right = x
         x.pai = y
 
-    # Preorder
+    # funçao para print em pre-ordem
     def _preorder(self, node):
         if node is not self.TNULL:
             sys.stdout.write(node.item + " ")
             self._preorder(node.left)
             self._preorder(node.right)
 
-    # Inorder
+    # funçao para print em ordem
     def _inorder(self, node):
         if node != self.TNULL:
             self._inorder(node.left)
             sys.stdout.write(node.item + " ")
             self._inorder(node.right)
 
-    # Postorder
+    # funçao para print em pos-ordem
     def _postorder(self, node):
         if node != self.TNULL:
             self._postorder(node.left)
@@ -136,7 +136,7 @@ class RedBlackTree:
         return self._procurar(self.root, k)
 
     # inicia a inserçao da key na arvore
-    def insert(self, key):
+    def inserir(self, key):
         node = Node(key)
         node.pai = None
         node.item = key
@@ -177,8 +177,8 @@ class RedBlackTree:
 
 
 
-    # Printing the tree
-    def __print_helper(self, node, indent, last):
+    # faz a construçao grafica da arvore
+    def _printHelper(self, node, indent, last):
         if node != self.TNULL:
             sys.stdout.write(indent)
             if last:
@@ -190,11 +190,11 @@ class RedBlackTree:
 
             s_color = "RED" if node.color == 1 else "BLACK"
             print(str(node.item) + "(" + s_color + ")")
-            self.__print_helper(node.left, indent, False)
-            self.__print_helper(node.right, indent, True)
+            self._printHelper(node.left, indent, False)
+            self._printHelper(node.right, indent, True)
 
-    def print_tree(self):
-        self.__print_helper(self.root, "", True)
+    def printHelper(self):
+        self._printHelper(self.root, "", True)
 
 
 
@@ -213,7 +213,7 @@ class RedBlackTree:
                 if s.color == 1:
                     s.color = 0
                     x.pai.color = 1
-                    self.left_rotate(x.pai)
+                    self.leftRotate(x.pai)
                     s = x.pai.right
 
                 if s.left.color == 0 and s.right.color == 0:
@@ -223,20 +223,20 @@ class RedBlackTree:
                     if s.right.color == 0:
                         s.left.color = 0
                         s.color = 1
-                        self.right_rotate(s)
+                        self.rightRotate(s)
                         s = x.pai.right
 
                     s.color = x.pai.color
                     x.pai.color = 0
                     s.right.color = 0
-                    self.left_rotate(x.pai)
+                    self.leftRotate(x.pai)
                     x = self.root
             else:
                 s = x.pai.left
                 if s.color == 1:
                     s.color = 0
                     x.pai.color = 1
-                    self.right_rotate(x.pai)
+                    self.rightRotate(x.pai)
                     s = x.pai.left
 
                 if s.right.color == 0 and s.right.color == 0:
@@ -246,13 +246,13 @@ class RedBlackTree:
                     if s.left.color == 0:
                         s.right.color = 0
                         s.color = 1
-                        self.left_rotate(s)
+                        self.leftRotate(s)
                         s = x.pai.left
 
                     s.color = x.pai.color
                     x.pai.color = 0
                     s.left.color = 0
-                    self.right_rotate(x.pai)
+                    self.rightRotate(x.pai)
                     x = self.root
         x.color = 0
 
@@ -278,7 +278,7 @@ class RedBlackTree:
                 node = node.left
 
         if z == self.TNULL:
-            print("Cannot find key in the tree")
+            print("O ELEMENTO "+str(key)+" NAO FOI ENCONTRADO")
             return
 
         y = z
@@ -358,20 +358,21 @@ class RedBlackTree:
 
 
 if __name__ == "__main__":
-    bst = RedBlackTree()
+    rb = RedBlackTree()
+"""
+    info = ''
 
-    bst.insert(55)
-    bst.insert(40)
-    bst.insert(65)
-    bst.insert(60)
-    bst.insert(75)
-    bst.insert(57)
-
-    bst.print_tree()
-
-    bst.searchTree(410)
-
-    print("\nAfter deleting an element")
-    bst.delete_node(40)
-    bst.print_tree()
-
+    while info != 'FIM':
+        info = input()
+        infoParsed = info.split(' ')
+        if infoParsed[0] == 'ACRESCENTA':
+            rb.inserir(int(infoParsed[1]))
+        if infoParsed[0] == 'CONSULTA':
+            rb.procura(int(infoParsed[1]))
+        if infoParsed[0] == 'LISTAGEM':
+            rb.inorder()
+            print("FIM")
+        if infoParsed[0] == 'APAGA':
+            print("LISTAGEM DE NOMES APAGADA")
+            root = None
+            """

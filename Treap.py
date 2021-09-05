@@ -2,8 +2,8 @@ import sys
 
 
 class Node:
-    def __init__(self, data, priority):
-        self.data = data
+    def __init__(self, item, priority):
+        self.item = item
         self.priority = priority
         self.pai = None
         self.left = None
@@ -14,35 +14,8 @@ class Treap:
     def __init__(self):
         self.root = None
 
-    def __print_helper(self, currPtr, indent, last):
-        # print the tree structure on the screen
-        if currPtr is not None:
-            sys.stdout.write(indent)
-            if last:
-                sys.stdout.write("R----")
-                indent += "     "
-            else:
-                sys.stdout.write("L----")
-                indent += "|    "
-
-            print(currPtr.data, currPtr.priority)
-
-            self.__print_helper(currPtr.left, indent, False)
-            self.__print_helper(currPtr.right, indent, True)
-
-    def __search_tree_helper(self, node, key):
-        if node is None:
-            print("ELEMENTO NAO ENCONTRADO")
-            return
-        elif key == node.item:
-            print("ELEMENTO ENCONTRADO")
-            return node
-        if key < node.data:
-            return self.__search_tree_helper(node.left, key)
-        return self.__search_tree_helper(node.right, key)
-
-    # rotate left at node x
-    def __left_rotate(self, x):
+    # faz a rotaçao para o lado esquerdo do node x
+    def leftRotate(self, x):
         y = x.right
         x.right = y.left
         if y.left is not None:
@@ -58,8 +31,8 @@ class Treap:
         y.left = x
         x.pai = y
 
-    # rotate right at node x
-    def __right_rotate(self, x):
+    # faz a rotaçao para o lado direito do node x
+    def rightRotate(self, x):
         y = x.left
         x.left = y.right
         if y.right is not None:
@@ -76,7 +49,40 @@ class Treap:
         y.right = x
         x.pai = y
 
-    # Splaying operation. It moves x to the root of the tree
+    # funçao para print em pre-ordem
+    def _preorder(self, node):
+        if node is not None:
+            sys.stdout.write(str(node.item) + " ("+str(node.priority)+")  ")
+            self._preorder(node.left)
+            self._preorder(node.right)
+
+    # funçao para print em ordem
+    def _inorder(self, node):
+        if node is not None:
+            self._inorder(node.left)
+            sys.stdout.write(str(node.item) + " ("+str(node.priority)+")  ")
+            self._inorder(node.right)
+
+    # funçao para print em pos-ordem
+    def _postorder(self, node):
+        if node is not None:
+            self._postorder(node.left)
+            self._postorder(node.right)
+            sys.stdout.write(str(node.item) + " (" + str(node.priority) + ")  ")
+
+    # faz a procura recursiva na arvore
+    def _procurar(self, node, key):
+        if node is None:
+            print("ELEMENTO "+str(key)+" NAO ENCONTRADO")
+            return
+        elif key == node.item:
+            print("ELEMENTO "+str(key)+" ENCONTRADO")
+            return node
+        if key < node.data:
+            return self._procurar(node.left, key)
+        return self._procurar(node.right, key)
+
+    # faz com que a arvore mantenha o equilibrio segundo as regras de construçao de uma treap
     def moveUp(self, x):
         if x.pai is None:
             return
@@ -84,14 +90,27 @@ class Treap:
             return
         else:
             if x == x.pai.left:
-                self.__right_rotate(x.pai)
+                self.rightRotate(x.pai)
             else:
-                self.__left_rotate(x.pai)
+                self.leftRotate(x.pai)
 
         self.moveUp(x)
 
-    # insert the key to the tree in its appropriate position
-    def insert(self, key, priority):
+    def preorder(self):
+        self._preorder(self.root)
+
+    def inorder(self):
+        self._inorder(self.root)
+
+    def postorder(self):
+        self._postorder(self.root)
+
+    # inicia a procura pelo node K
+    def procurar(self, k):
+        return self._procurar(self.root, k)
+
+    # inicia a inserçao da key na arvore
+    def inserir(self, key, priority):
         node = Node(key, priority)
         y = None
         x = self.root
@@ -114,21 +133,62 @@ class Treap:
 
         self.moveUp(node)
 
-    def pretty_print(self):
-        self.__print_helper(self.root, "", True)
+
+
+
+
+
+
+    # faz a construçao grafica da arvore
+    def _printHelper(self, currPtr, indent, last):
+        if currPtr is not None:
+            sys.stdout.write(indent)
+            if last:
+                sys.stdout.write("R----")
+                indent += "     "
+            else:
+                sys.stdout.write("L----")
+                indent += "|    "
+
+            print(currPtr.item, currPtr.priority)
+
+            self._printHelper(currPtr.left, indent, False)
+            self._printHelper(currPtr.right, indent, True)
+
+    def printHelper(self):
+        self._printHelper(self.root, "", True)
+
 
 
 if __name__ == "__main__":
-    bst = Treap()
+    t = Treap()
 
-    bst.insert(5, 0.30)
-    bst.insert(7, 0.47)
-    bst.insert(19, 0.54)
-    bst.insert(23, 0.46)
-    bst.insert(30, 0.73)
-    bst.insert(31, 0.28)
-    bst.insert(45, 0.99)
-    bst.insert(48, 0.51)
-    bst.insert(51, 0.98)
-    bst.insert(25, 0.22)
-    bst.pretty_print()
+    t.inserir(5, 0.30)
+    t.inserir(7, 0.47)
+    t.inserir(19, 0.54)
+    t.inserir(23, 0.46)
+    t.inserir(30, 0.73)
+    t.inserir(31, 0.28)
+    t.inserir(45, 0.99)
+    t.inserir(48, 0.51)
+    t.inserir(51, 0.98)
+    t.inserir(25, 0.22)
+    t.printHelper()
+
+"""
+    info = ''
+
+    while info != 'FIM':
+        info = input()
+        infoParsed = info.split(' ')
+        if infoParsed[0] == 'ACRESCENTA':
+            t.inserir(int(infoParsed[1]), int(infoParsed[2]))
+        if infoParsed[0] == 'CONSULTA':
+            t.procura(int(infoParsed[1]))
+        if infoParsed[0] == 'LISTAGEM':
+            t.inorder()
+            print("FIM")
+        if infoParsed[0] == 'APAGA':
+            print("LISTAGEM DE NOMES APAGADA")
+            root = None
+            """
