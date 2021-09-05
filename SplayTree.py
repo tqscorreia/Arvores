@@ -18,7 +18,7 @@ class SplayTree:
         y = None
         x = self.root
 
-        while x != None:
+        while x is not None:
             y = x
             if no.nome < x.nome:
                 x = x.left
@@ -29,7 +29,7 @@ class SplayTree:
                 return
 
         no.pai = y
-        if y == None:
+        if y is None:
             self.root = no
         elif no.nome < y.nome:
             y.left = no
