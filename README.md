@@ -41,6 +41,7 @@ com o hash code dos seus filhos (ver figura).
 Estas árvores servem para fazer uma verificação segura do conteúdo de extensas estruturas de
 dados. Vamos ainda assumir que a Hash Tree é formada a partir de uma árvore binária completa.
 A figura abaixo apresenta uma Merkle Tree.
+<img align="center" src="https://cdn.discordapp.com/attachments/773515424197115925/1011410578172035174/unknown.png"/>
 
 Entrada:
 Como entrada o programa recebe uma linha com o número de transações a codificar, seguida de uma linha
