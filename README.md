@@ -16,7 +16,6 @@ Tabela de conteúdos
         * [Testes](#testes-2)
      * [Terceira parte](#terceira-parte)
         * [Testes](#testes-3)
-   * [Funcionalidades](#gear-funcionalidades)
 
 <!--te-->
 
@@ -28,19 +27,20 @@ de dados estudadas em Algoritmos e Estruturas de Dados com foco na programação
 vantagens e desvantagens de cada uma, nomeadamente no que diz respeito a complexidade temporal e
 espacial análise teórica e empírica da complexidade temporal.
 
-O programa é dividido em  partes.
+O programa é dividido em três partes.
 
 ---
 ## Primeira parte
 
 #### Merkle Tree para Integração numa Nova Criptomoeda
 
-Uma Merkle Tree ou Hash Tree é uma estrutura muito usada em criptografia em que cada folha da
+Uma Merkle Tree ou Hash Tree é uma estrutura usada em criptografia em que cada folha da
 árvore é anotada com o hash code referente a um bloco de dados. Os nós internos são anotados
-com o hash code dos seus filhos (ver figura).
+com o hash code dos seus filhos.
 Estas árvores servem para fazer uma verificação segura do conteúdo de extensas estruturas de
 dados. Vamos ainda assumir que a Hash Tree é formada a partir de uma árvore binária completa.
 A figura abaixo apresenta uma Merkle Tree.
+
 <img align="center" src="https://cdn.discordapp.com/attachments/773515424197115925/1011410578172035174/unknown.png"/>
 
 Entrada:
@@ -348,8 +348,3 @@ CLIENTE NAO REGISTADO
 manuel rua verde 20000
 FIM
 ```
-
----
-## :gear: Funcionalidades
-
-- [ ] 
